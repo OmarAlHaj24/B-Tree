@@ -67,23 +67,22 @@ public:
         }
         else
         {
-            int nodeToTraverse;
+            int nodeToTraverse = 0;
             while(!currNode->leaf){
                 for(int i = 0; i < currNode->currSize; i++){
+                    nodeToTraverse = i;
                     if(currNode->keys[i] > key){
                         break;
-                    }else{
-                        nodeToTraverse = i;
                     }
                 }
                 currNode = currNode->children[nodeToTraverse];
             }
             if(currNode->currSize < order - 1){
                 currNode->keys[currNode->currSize] = key;
-                sort(currNode->keys, currNode->keys + currNode->currSize);
                 currNode->currSize++;
+                sort(currNode->keys, currNode->keys + currNode->currSize);
             }else{
-                
+
             }
         }
     }
