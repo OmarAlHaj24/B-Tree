@@ -21,7 +21,8 @@ public:
     }
     ~BTreeNode()
     {
-
+        delete [] keys;
+        delete [] children;
     }
     void splitNode()
     {
@@ -54,7 +55,7 @@ public:
     }
     ~BTree()
     {
-
+        delete root;
     }
     void Insert(int key)
     {
@@ -69,9 +70,10 @@ public:
         {
             int nodeToTraverse = 0;
             while(!currNode->leaf){
+                nodeToTraverse = currNode->currSize;
                 for(int i = 0; i < currNode->currSize; i++){
-                    nodeToTraverse = i;
                     if(currNode->keys[i] > key){
+                        nodeToTraverse = i;
                         break;
                     }
                 }
