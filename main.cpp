@@ -4,7 +4,7 @@ using namespace std;
 
 class BTreeNode{
 private:
-    char *keys;
+    int *keys;
     BTreeNode **children;
     BTreeNode *parent;
     int currSize; //Number of keys
@@ -18,7 +18,7 @@ public:
         currSize = 0;
         this->order = order;
         leaf = true;
-        keys = new char [order];
+        keys = new int [order];
         children = new BTreeNode* [order + 1];
         for(int i = 0; i < order; i++){
             keys[i] = NULL;
@@ -48,34 +48,44 @@ public:
     friend bool compareNodes(const BTreeNode* a, const BTreeNode* b);
 };
 
-bool compareNodes(const BTreeNode* a, const BTreeNode* b){
+bool compareNodes(const BTreeNode* a, const BTreeNode* b)
+{
     if(a->keys[0] < b->keys[0]) return true;
     else return false;
 }
 
-void BTreeNode::splitNode(BTreeNode *&root) {
-    if(this->currSize <= this->order - 1){
+void BTreeNode::splitNode(BTreeNode *&root)
+{
+    if(this->currSize <= this->order - 1)
+    {
         return;
     }
     int idx = this->currSize / 2;
     BTreeNode* newNode = new BTreeNode(order);
-    for(int i = idx + 1, j = 0; i < this->currSize; i++, j++){
+    for(int i = idx + 1, j = 0; i < this->currSize; i++, j++)
+    {
         newNode->keys[j] = this->keys[i];
         newNode->currSize++;
     }
+    for(int i = idx + 1, j = 0; i < currSize + 1; i++, j++)
+    {
+        newNode->children[j] = children[i];
+        if(children[i] != NULL){
+            newNode->children[j]->parent = newNode;
+        }
+        if(children[i] != NULL){
+            newNode->leaf = false;
+        }
+    }
     this->currSize = idx;
-    if(this->parent == NULL){
+    if(this->parent == NULL)
+    {
         parent = new BTreeNode(order);
         parent->children[0] = this;
         root = parent;
         root->leaf = false;
     }
-    for(int i = 0; i < order + 1; i++){
-        if(parent->children[i] == NULL){
-            parent->children[i] = newNode;
-            break;
-        }
-    }
+    parent->children[parent->currSize + 1] = newNode;
     parent->keys[parent->currSize] = keys[idx];
     parent->currSize++;
     newNode->parent = parent;
@@ -110,10 +120,13 @@ public:
         else
         {
             int nodeToTraverse = 0;
-            while(!currNode->leaf){
+            while(!currNode->leaf)
+            {
                 nodeToTraverse = currNode->currSize;
-                for(int i = 0; i < currNode->currSize; i++){
-                    if(currNode->keys[i] > key){
+                for(int i = 0; i < currNode->currSize; i++)
+                {
+                    if(currNode->keys[i] > key)
+                    {
                         nodeToTraverse = i;
                         break;
                     }
@@ -133,40 +146,13 @@ public:
     }
 };
 
-int main()
-{
-    BTree t(5);
-    // Look at the example in our lecture:
-    t.Insert('G');
-    t.Insert('I');
-    t.Insert('B');
-    t.Insert('J');
-    t.Insert('C');
-    t.Insert('A');
-    t.Insert('K');
-    t.Insert('E');
-    t.Insert('D');
-    t.Insert('S');//
-    t.Insert('T');//
-    t.Insert('R');
-    t.Insert('L');//
-    t.Insert('F');
-    t.Insert('H');
-    t.Insert('M');//
-    t.Insert('N');
-    t.Insert('P');//
-    t.Insert('Q');//
-    t.Print(); // Should output the following on the screen:
-    /*
-    K
-      C,G
-        A,B
-        D,E,F
-        H,I,J
-      N,R
-        L,M
-        P,Q
-        S,T
-    */
-    return 0;
+int main() {
+    BTree t1(3);
+    t1.Insert(1);
+    t1.Insert(5);
+    t1.Insert(0);
+    t1.Insert(4);
+    t1.Insert(3);
+    t1.Insert(2);
+    t1.Print();
 }

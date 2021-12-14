@@ -63,7 +63,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1639488722297</updated>
-      <workItem from="1639488724194" duration="17272000" />
+      <workItem from="1639488724194" duration="24100000" />
     </task>
     <servers />
   </component>
@@ -73,6 +73,7 @@
   <component name="XDebuggerManager">
     <watches-manager>
       <configuration name="CMakeRunConfiguration">
+        <watch expression="this" />
         <watch expression="this" />
       </configuration>
     </watches-manager>
