@@ -16,7 +16,7 @@ public:
         currSize = 0;
         this->order = order;
         leaf = true;
-        keys = new int [order - 1];
+        keys = new int [order];
         children = new BTreeNode* [order];
     }
     ~BTreeNode()
@@ -24,9 +24,19 @@ public:
         delete [] keys;
         delete [] children;
     }
-    void splitNode()
+    void splitNode(BTreeNode* root, BTreeNode* node)
     {
-
+//        while(!currNode->leaf){
+//            nodeToTraverse = currNode->currSize;
+//            for(int i = 0; i < currNode->currSize; i++){
+//                if(currNode->keys[i] > key){
+//                    nodeToTraverse = i;
+//                    break;
+//                }
+//            }
+//            currNode = currNode->children[nodeToTraverse];
+//        }
+        
     }
     void traverse()
     {
@@ -79,13 +89,10 @@ public:
                 }
                 currNode = currNode->children[nodeToTraverse];
             }
-            if(currNode->currSize < order - 1){
-                currNode->keys[currNode->currSize] = key;
-                currNode->currSize++;
-                sort(currNode->keys, currNode->keys + currNode->currSize);
-            }else{
-
-            }
+            currNode->keys[currNode->currSize] = key;
+            currNode->currSize++;
+            sort(currNode->keys, currNode->keys + currNode->currSize);
+            currNode->splitNode(root, currNode);
         }
     }
     void Print()
