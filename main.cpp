@@ -29,6 +29,9 @@ public:
     ~BTreeNode()
     {
         delete [] keys;
+        for(int i = 0; i < order + 1; i++){
+            delete children[i];
+        }
         delete [] children;
     }
     void splitNode(BTreeNode*& root);
@@ -62,20 +65,26 @@ void BTreeNode::splitNode(BTreeNode *&root)
     }
     int idx = this->currSize / 2;
     BTreeNode* newNode = new BTreeNode(order);
-    for(int i = idx + 1, j = 0; i < this->currSize; i++, j++)
+    int i = idx + 1, j = 0;
+    while(i < this->currSize)
     {
         newNode->keys[j] = this->keys[i];
         newNode->currSize++;
+        i++; j++;
     }
-    for(int i = idx + 1, j = 0; i < currSize + 1; i++, j++)
+    i = idx + 1, j = 0;
+    while(i < currSize + 1)
     {
         newNode->children[j] = children[i];
-        if(children[i] != NULL){
+        if(children[i] != NULL)
+        {
             newNode->children[j]->parent = newNode;
         }
-        if(children[i] != NULL){
+        if(children[i] != NULL)
+        {
             newNode->leaf = false;
         }
+        i++; j++;
     }
     this->currSize = idx;
     if(this->parent == NULL)
