@@ -156,12 +156,16 @@ public:
 };
 
 int main() {
-    BTree t1(3);
+    BTree t1(4);
     t1.Insert(1);
-    t1.Insert(5);
-    t1.Insert(0);
-    t1.Insert(4);
-    t1.Insert(3);
     t1.Insert(2);
+    t1.Insert(3);
+    t1.Insert(4);
+    t1.Insert(5);
+    t1.Insert(6);
+    t1.Insert(7);
+    t1.Insert(8);
+    t1.Insert(9);
+    t1.Insert(10);
     t1.Print();
 }
