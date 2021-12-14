@@ -31,37 +31,7 @@ public:
         delete [] keys;
         delete [] children;
     }
-    void splitNode(BTreeNode*& root)
-    {
-        if(this->currSize <= this->order - 1){
-            return;
-        }
-        int idx = this->currSize / 2;
-        BTreeNode* newNode = new BTreeNode(order);
-        for(int i = idx + 1, j = 0; i < this->currSize; i++, j++){
-            newNode->keys[j] = this->keys[i];
-            newNode->currSize++;
-        }
-        this->currSize = idx;
-        if(this->parent == NULL){
-            parent = new BTreeNode(order);
-            parent->children[0] = this;
-            root = parent;
-            root->leaf = false;
-        }
-        for(int i = 0; i < order + 1; i++){
-            if(parent->children[i] == NULL){
-                parent->children[i] = newNode;
-                break;
-            }
-        }
-        parent->keys[parent->currSize] = keys[idx];
-        parent->currSize++;
-        newNode->parent = parent;
-        sort(parent->keys, parent->keys + parent->currSize);
-        sort(parent->children, parent->children + parent->currSize + 1);
-        parent->splitNode(root);
-    }
+    void splitNode(BTreeNode*& root);
     void traverse()
     {
         for(int i = 0; i < currSize; i++)
@@ -75,7 +45,44 @@ public:
             children[i]->traverse();
         }
     }
+    friend bool compareNodes(const BTreeNode* a, const BTreeNode* b);
 };
+
+bool compareNodes(const BTreeNode* a, const BTreeNode* b){
+    if(a->keys[0] < b->keys[0]) return true;
+    else return false;
+}
+
+void BTreeNode::splitNode(BTreeNode *&root) {
+    if(this->currSize <= this->order - 1){
+        return;
+    }
+    int idx = this->currSize / 2;
+    BTreeNode* newNode = new BTreeNode(order);
+    for(int i = idx + 1, j = 0; i < this->currSize; i++, j++){
+        newNode->keys[j] = this->keys[i];
+        newNode->currSize++;
+    }
+    this->currSize = idx;
+    if(this->parent == NULL){
+        parent = new BTreeNode(order);
+        parent->children[0] = this;
+        root = parent;
+        root->leaf = false;
+    }
+    for(int i = 0; i < order + 1; i++){
+        if(parent->children[i] == NULL){
+            parent->children[i] = newNode;
+            break;
+        }
+    }
+    parent->keys[parent->currSize] = keys[idx];
+    parent->currSize++;
+    newNode->parent = parent;
+    sort(parent->keys, parent->keys + parent->currSize);
+    sort(parent->children, parent->children + parent->currSize + 1, compareNodes);
+    parent->splitNode(root);
+}
 
 class BTree{
 private:
@@ -139,16 +146,16 @@ int main()
     t.Insert('K');
     t.Insert('E');
     t.Insert('D');
-    t.Insert('S');
-    t.Insert('T');
+    t.Insert('S');//
+    t.Insert('T');//
     t.Insert('R');
-    t.Insert('L');
+    t.Insert('L');//
     t.Insert('F');
     t.Insert('H');
-    t.Insert('M');
+    t.Insert('M');//
     t.Insert('N');
-    t.Insert('P');
-    t.Insert('Q');
+    t.Insert('P');//
+    t.Insert('Q');//
     t.Print(); // Should output the following on the screen:
     /*
     K
