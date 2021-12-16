@@ -41,61 +41,7 @@ public:
         }
         delete [] children;
     }
-    void splitNode(BTreeNode*& root)
-    {
-        if(this->currSize <= order - 1)
-        {
-            return;
-        }
-        int idx = this->currSize / 2;
-        BTreeNode* newNode = new BTreeNode();
-        int i = idx + 1, j = 0;
-        while(i < this->currSize)
-        {
-            newNode->keys[j] = this->keys[i];
-            newNode->currSize++;
-            i++; j++;
-        }
-        i = idx + 1, j = 0;
-        while(i < currSize + 1)
-        {
-            newNode->children[j] = children[i];
-            if(children[i] != NULL)
-            {
-                newNode->children[j]->parent = newNode;
-            }
-            if(children[i] != NULL)
-            {
-                newNode->leaf = false;
-            }
-            i++; j++;
-        }
-        this->currSize = idx;
-        if(this->parent == NULL)
-        {
-            parent = new BTreeNode();
-            parent->children[0] = this;
-            root = parent;
-            root->leaf = false;
-        }
-        for(i = parent->currSize; i>=0; i--)
-        {
-            if(i == 0 || parent->keys[i-1]<=keys[idx])
-            {
-                parent->keys[i] = keys[idx];
-                parent->children[i+1] = newNode;
-                break;
-            }
-            else if(parent->keys[i-1]>keys[idx])
-            {
-                parent->keys[i] = parent->keys[i -1];
-                parent->children[i+1] = parent->children[i];
-            }
-        }
-        parent->currSize++;
-        newNode->parent = parent;
-        parent->splitNode(root);
-    }
+    void splitNode(BTreeNode*& root);
     void traverse(int level)
     {
         for(int i = 0; i < level; i++)
@@ -117,16 +63,76 @@ public:
             children[i]->traverse(level+2);
         }
     }
+
 };
+
+template<class T,int order>
+void BTreeNode<T, order>::splitNode(BTreeNode<T, order> *&root)
+{
+    if(this->currSize <= order - 1)
+    {
+        return;
+    }
+    int idx = this->currSize / 2;
+    BTreeNode* newNode = new BTreeNode();
+    int i = idx + 1, j = 0;
+    while(i < this->currSize)
+    {
+        newNode->keys[j] = this->keys[i];
+        newNode->currSize++;
+        i++; j++;
+    }
+    i = idx + 1, j = 0;
+    while(i < currSize + 1)
+    {
+        newNode->children[j] = children[i];
+        if(children[i] != NULL)
+        {
+            newNode->children[j]->parent = newNode;
+        }
+        if(children[i] != NULL)
+        {
+            newNode->leaf = false;
+        }
+        i++; j++;
+    }
+    this->currSize = idx;
+    if(this->parent == NULL)
+    {
+        parent = new BTreeNode();
+        parent->children[0] = this;
+        root = parent;
+        root->leaf = false;
+    }
+    for(int i = parent->currSize; i>=0; i--)
+    {
+        if(i == 0 || parent->keys[i-1]<=keys[idx])
+        {
+            parent->keys[i] = keys[idx];
+            parent->children[i+1] = newNode;
+            break;
+        }
+        else if(parent->keys[i-1]>keys[idx])
+        {
+            parent->keys[i] = parent->keys[i -1];
+            parent->children[i+1] = parent->children[i];
+        }
+    }
+    parent->currSize++;
+    newNode->parent = parent;
+    parent->splitNode(root);
+}
 
 template<class T,int order>
 class BTree{
 private:
     BTreeNode<T, order>* root; //The root of the tree
+    //int order; //The degree of the tree
 public:
     BTree()
     {
         root = NULL;
+        //this->order = order;
     }
     ~BTree()
     {
