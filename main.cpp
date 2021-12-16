@@ -35,10 +35,6 @@ public:
     ~BTreeNode()
     {
         delete [] keys;
-        for(int i = 0; i < order + 1; i++)
-        {
-            delete children[i];
-        }
         delete [] children;
     }
     void splitNode(BTreeNode*& root)
