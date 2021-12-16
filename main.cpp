@@ -188,7 +188,8 @@ public:
 };
 
 
-int main() {
+int main()
+{
     // Construct a BTree of order 3, which stores int data
     BTree<int, 3> t1;
 
